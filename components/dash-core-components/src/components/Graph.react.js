@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {asyncDecorator} from '@plotly/dash-component-plugins';
 import graph from '../utils/LazyLoader/graph';
 import plotly from '../utils/LazyLoader/plotly';
+import mathjax from '../utils/LazyLoader/mathjax';
 import {
     privatePropTypes,
     privateDefaultProps,
@@ -120,7 +121,7 @@ class PlotlyGraph extends Component {
 }
 
 const RealPlotlyGraph = asyncDecorator(PlotlyGraph, () =>
-    Promise.all([plotly(), graph()]).then(([, graph]) => graph)
+    Promise.all([graph(), plotly(), mathjax()]).then(([graph]) => graph)
 );
 
 const ControlledPlotlyGraph = memo(props => {
