@@ -22,6 +22,8 @@ class PlotlyGraph extends Component {
     constructor(props) {
         super(props);
 
+        PlotlyGraph._needsMathjax = props.mathjax;
+
         this.state = {
             prependData: [],
             extendData: [],
@@ -121,7 +123,11 @@ class PlotlyGraph extends Component {
 }
 
 const RealPlotlyGraph = asyncDecorator(PlotlyGraph, () =>
-    Promise.all([graph(), plotly(), mathjax()]).then(([graph]) => graph)
+    Promise.all([
+        graph(),
+        plotly(),
+        PlotlyGraph._needsMathjax ? mathjax() : undefined,
+    ]).then(([graph]) => graph)
 );
 
 const ControlledPlotlyGraph = memo(props => {
@@ -266,6 +272,11 @@ PlotlyGraph.propTypes = {
      * className of the parent div
      */
     className: PropTypes.string,
+
+    /**
+     * Beta: If true, loads mathjax v3 (tex-svg) into the page
+     */
+    mathjax: PropTypes.bool,
 
     /**
      * Beta: If true, animate between updates using
@@ -575,6 +586,7 @@ PlotlyGraph.defaultProps = {
         frames: [],
     },
     responsive: 'auto',
+    mathjax: false,
     animate: false,
     animation_options: {
         frame: {
